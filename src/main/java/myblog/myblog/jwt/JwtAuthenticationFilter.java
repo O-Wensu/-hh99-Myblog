@@ -56,9 +56,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
             // (토큰 만료 && 리프레시 토큰 만료) || 리프레시 토큰이 DB와 비교했을 때 같지 않다면
-             else {
-                 jwtExceptionHandler(response, "RefreshToken Expired", HttpStatus.BAD_REQUEST.value());
-                 return;
+            else {
+                jwtExceptionHandler(response, "RefreshToken Expired", HttpStatus.BAD_REQUEST.value());
+                return;
             }
         }
         filterChain.doFilter(request, response);
