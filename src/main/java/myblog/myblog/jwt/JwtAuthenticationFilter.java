@@ -54,6 +54,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     // Security context에 인증 정보 넣기
                     setAuthentication(username);
                 }
+            } else if (refresh_token == null) {
+                jwtExceptionHandler(response, "AccessToken Expired. Please send the refresh Token together", HttpStatus.BAD_REQUEST.value());
+                return;
             }
             // (토큰 만료 && 리프레시 토큰 만료) || 리프레시 토큰이 DB와 비교했을 때 같지 않다면
             else {

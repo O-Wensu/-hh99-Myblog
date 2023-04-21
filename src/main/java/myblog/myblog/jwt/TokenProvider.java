@@ -37,7 +37,7 @@ public class TokenProvider {
     public static final String ACCESS_KEY = "ACCESS_KEY";
     public static final String REFRESH_KEY = "REFRESH_KEY";
     public static final String AUTHORIZATION_KEY = "auth";
-    private static final Date ACCESS_TIME = (Date) Date.from(Instant.now().plus(1, ChronoUnit.HOURS));
+    private static final Date ACCESS_TIME = (Date) Date.from(Instant.now().plus(15, ChronoUnit.SECONDS));
     private static final Date REFRESH_TIME = (Date) Date.from(Instant.now().plus(2, ChronoUnit.HOURS));
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserDetailsService userDetailsService;
@@ -74,7 +74,7 @@ public class TokenProvider {
 
     // header 토큰을 가져오기
     public String resolveToken(HttpServletRequest request, String token) {
-        String tokenName = token.equals("Access") ? ACCESS_KEY : REFRESH_KEY;
+        String tokenName = token.equals("ACCESS_KEY") ? ACCESS_KEY : REFRESH_KEY;
         //Authorization 이라는 헤더 값(토큰)을 가져옴
         String bearerToken = request.getHeader(tokenName);
         //토큰 값이 있는지, 토큰 값이 Bearer 로 시작하는지 판단
