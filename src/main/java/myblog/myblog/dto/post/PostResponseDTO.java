@@ -28,10 +28,10 @@ public class PostResponseDTO {
         this.id = post.getId();
         this.title = post.getTitle();
         this.username = post.getMember().getUsername();
+        this.likeCount = post.getLikeCount();
         this.commentList = post.getCommentList().stream().map(CommentResponseDto::new).collect(Collectors.toList());
         this.content = post.getContent();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
-        this.likeCount = post.getLikeCount();
     }
 }

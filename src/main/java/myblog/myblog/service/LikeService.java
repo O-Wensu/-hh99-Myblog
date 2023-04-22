@@ -5,6 +5,7 @@ import myblog.myblog.domain.Likes;
 import myblog.myblog.domain.Member;
 import myblog.myblog.domain.Post;
 import myblog.myblog.exception.custom_exeption.PostException;
+import myblog.myblog.repository.CommentRepository;
 import myblog.myblog.repository.LikeRepository;
 import myblog.myblog.repository.PostRepository;
 import myblog.myblog.util.ExceptionMessage;
@@ -22,20 +23,27 @@ public class LikeService {
 
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
-
+    private final CommentRepository commentRepository;
 
     /**
      * 게시글 좋아요/좋아요 취소
      */
     public ResponseEntity updateLike(Long id, Member member) {
         Post post = validatePost(id);
-        isAlreadyLike(member, post);
+        isPostLike(member, post);
+        BasicResponseDto basicResponseDto;
 
         //이미 좋아요를 했으면 취소
-        if (isAlreadyLike(member, post)) {
+        if (isPostLike(member, post)) {
             post.cancelLike();
             likeRepository.deleteByMemberIdAndPostId(member.getId(), id);
-            return new ResponseEntity("cancel like success", HttpStatus.OK);
+            basicResponseDto = BasicResponseDto.setSuccess("cancel like success", StatusCode.OK);
+        } else {
+            // 추가
+            post.addLike();
+            Likes like = new Likes(member, post);
+            likeRepository.save(like);
+            basicResponseDto = BasicResponseDto.setSuccess("add like success", StatusCode.OK);
         }
 
         // 추가
@@ -45,6 +53,36 @@ public class LikeService {
         return new ResponseEntity("add like success", HttpStatus.OK);
     }
 
+    /**
+     * 댓글 좋아요/좋아요 취소
+     */
+    public ResponseEntity updateCommentLike(Long postId, Long commentId, Member member) {
+        Post post = validatePost(postId);
+        Comment comment = validateComment(commentId);
+        BasicResponseDto basicResponseDto;
+
+        //이미 좋아요를 했으면 취소
+        if (isPostLike(member, post)) {
+            comment.cancelLike();
+            likeRepository.deleteByMemberIdAndPostIdAndCommentId(member.getId(), postId, commentId);
+            basicResponseDto = BasicResponseDto.setSuccess("cancel like success", StatusCode.OK);
+        }else{
+            //추가
+            comment.addLike();
+            Likes like = new Likes(member, post, comment);
+            likeRepository.save(like);
+            basicResponseDto = BasicResponseDto.setSuccess("add like success", StatusCode.OK);
+        }
+        return new ResponseEntity(basicResponseDto, HttpStatus.OK);
+    }
+
+    //댓글 존재 여부 확인
+    private Comment validateComment(Long id) {
+        return commentRepository.findById(id).orElseThrow(
+                () -> new CommentException(ExceptionMessage.NO_SUCH_COMMENT_EXCEPTION.getMessage())
+        );
+    }
+
     //게시글 존재 여부 확인
     private Post validatePost(Long id) {
         return postRepository.findById(id).orElseThrow(
@@ -52,9 +90,18 @@ public class LikeService {
         );
     }
 
-    //좋아요 여부 확인
-    private boolean isAlreadyLike(Member member, Post post) {
+    //게시글 좋아요 여부 확인
+    private boolean isPostLike(Member member, Post post) {
         Optional<Likes> like = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
+        if (like.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    //댓글 좋아요 여부 확인
+    private boolean isCommentLike(Member member, Post post, Comment comment) {
+        Optional<Likes> like = likeRepository.findByMemberIdAndPostIdAndCommentId(member.getId(), post.getId(), comment.getId());
         if (like.isPresent()) {
             return true;
         }

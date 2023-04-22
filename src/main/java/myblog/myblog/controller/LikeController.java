@@ -18,4 +18,13 @@ public class LikeController {
     public ResponseEntity insert(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return likeService.updateLike(id, userDetails.getMember());
     }
+
+    @PostMapping("/like/{postId}/{commentId}")
+    public ResponseEntity insert(
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return likeService.updateCommentLike(postId, commentId, userDetails.getMember());
+    }
 }

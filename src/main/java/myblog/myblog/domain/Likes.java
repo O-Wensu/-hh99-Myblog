@@ -22,9 +22,20 @@ public class Likes {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+
     public Likes(Member member, Post post) {
         this.member = member;
         this.post = post;
+        this.comment = null;
+    }
+
+    public Likes(Member member, Post post, Comment comment) {
+        this.member = member;
+        this.post = post;
+        this.comment = comment;
     }
 }
 
