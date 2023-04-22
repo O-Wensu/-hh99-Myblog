@@ -3,6 +3,7 @@ package myblog.myblog.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import myblog.myblog.dto.post.PostRequestDTO;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,5 +51,14 @@ public class Post extends TimeStamped {
     public void update(PostRequestDTO reqDTO) {
         this.title = reqDTO.getTitle();
         this.content = reqDTO.getContent();
+    }
+
+    public void addLike() {
+        likeCount += 1;
+    }
+
+    public void cancelLike() {
+        if (likeCount - 1 < 0) return;
+        likeCount -= 1;
     }
 }

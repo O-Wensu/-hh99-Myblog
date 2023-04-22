@@ -31,5 +31,6 @@ public class PostResponseDTO {
         this.content = post.getContent();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
+        this.likeCount = post.getLikeCount();
     }
 }
