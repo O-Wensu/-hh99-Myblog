@@ -7,6 +7,7 @@ import myblog.myblog.dto.BasicResponseDto;
 import myblog.myblog.dto.post.PostRequestDTO;
 import myblog.myblog.dto.post.PostResponseDTO;
 import myblog.myblog.exception.custom_exeption.PostException;
+import myblog.myblog.repository.LikeRepository;
 import myblog.myblog.repository.PostRepository;
 import myblog.myblog.util.ExceptionMessage;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
-
+    private final LikeRepository likeRepository;
     /**
      * 전체 게시글 조회
      */
@@ -70,6 +71,9 @@ public class PostService {
 
         //작성자의 게시글인지 확인
         isPostAuthor(member, post);
+
+        //좋아요 삭제
+        likeRepository.deleteByPostId(post.getId());
 
         postRepository.deleteById(id);
         BasicResponseDto basicResponseDTO = BasicResponseDto.setSuccess("delete success", null);

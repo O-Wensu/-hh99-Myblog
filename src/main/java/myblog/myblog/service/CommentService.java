@@ -11,6 +11,7 @@ import myblog.myblog.dto.comment.CommentResponseDto;
 import myblog.myblog.exception.custom_exeption.CommentException;
 import myblog.myblog.exception.custom_exeption.PostException;
 import myblog.myblog.repository.CommentRepository;
+import myblog.myblog.repository.LikeRepository;
 import myblog.myblog.repository.PostRepository;
 import myblog.myblog.util.ExceptionMessage;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class CommentService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
 
     /**
      * 댓글 등록
@@ -51,12 +53,14 @@ public class CommentService {
      */
     @Transactional
     public ResponseEntity deleteComment(Long commentId, Member member) {
-        log.info("댓글 삭제");
         //댓글 존재 여부 확인
         Comment comment = validateComment(commentId);
 
         //작성자의 댓글인지 확인
         isCommentAuthor(member, comment);
+
+        //좋아요 삭제
+        likeRepository.deleteByCommentId(comment.getId());
 
         commentRepository.deleteById(commentId);
         BasicResponseDto basicResponseDTO = BasicResponseDto.setSuccess("delete success", null);

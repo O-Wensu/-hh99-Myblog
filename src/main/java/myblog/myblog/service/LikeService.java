@@ -57,7 +57,7 @@ public class LikeService {
         BasicResponseDto basicResponseDto;
 
         //이미 좋아요를 했으면 취소
-        if (isPostLike(member, post)) {
+        if (isCommentLike(member, post, comment)) {
             comment.cancelLike();
             likeRepository.deleteByMemberIdAndPostIdAndCommentId(member.getId(), postId, commentId);
             basicResponseDto = BasicResponseDto.setSuccess("cancel like success", StatusCode.OK);

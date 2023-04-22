@@ -20,11 +20,10 @@ public class LikeController {
     }
 
     @PostMapping("/like/{postId}/{commentId}")
-    public ResponseEntity insert(
+    public ResponseEntity updateCommentLike(
             @PathVariable Long postId,
             @PathVariable Long commentId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return likeService.updateCommentLike(postId, commentId, userDetails.getMember());
     }
 }
