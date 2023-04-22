@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import myblog.myblog.dto.comment.CommentRequestDto;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Entity
@@ -26,6 +27,10 @@ public class Comment extends TimeStamped {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int likeCount;
+
     public Comment(CommentRequestDto commentRequestDTO) {
         this.comment = commentRequestDTO.getComment();
     }
@@ -40,5 +45,15 @@ public class Comment extends TimeStamped {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    // ============ 비즈니스 메서드============
+    public void addLike() {
+        likeCount += 1;
+    }
+
+    public void cancelLike() {
+        if (likeCount - 1 < 0) return;
+        likeCount -= 1;
     }
 }

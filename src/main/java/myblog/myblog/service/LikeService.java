@@ -1,9 +1,9 @@
 package myblog.myblog.service;
 
 import lombok.RequiredArgsConstructor;
-import myblog.myblog.domain.Likes;
-import myblog.myblog.domain.Member;
-import myblog.myblog.domain.Post;
+import myblog.myblog.domain.*;
+import myblog.myblog.dto.BasicResponseDto;
+import myblog.myblog.exception.custom_exeption.CommentException;
 import myblog.myblog.exception.custom_exeption.PostException;
 import myblog.myblog.repository.CommentRepository;
 import myblog.myblog.repository.LikeRepository;
@@ -28,7 +28,7 @@ public class LikeService {
     /**
      * 게시글 좋아요/좋아요 취소
      */
-    public ResponseEntity updateLike(Long id, Member member) {
+    public ResponseEntity updatePostLike(Long id, Member member) {
         Post post = validatePost(id);
         isPostLike(member, post);
         BasicResponseDto basicResponseDto;
@@ -45,12 +45,7 @@ public class LikeService {
             likeRepository.save(like);
             basicResponseDto = BasicResponseDto.setSuccess("add like success", StatusCode.OK);
         }
-
-        // 추가
-        post.addLike();
-        Likes like = new Likes(member, post);
-        likeRepository.save(like);
-        return new ResponseEntity("add like success", HttpStatus.OK);
+        return new ResponseEntity(basicResponseDto, HttpStatus.OK);
     }
 
     /**
