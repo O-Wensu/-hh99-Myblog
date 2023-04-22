@@ -7,7 +7,8 @@ public enum ExceptionMessage {
     NOT_MATCHING_PASSWORD_EXCEPTION("비밀번호가 일치하지 않습니다."),
     NO_SUCH_BOARD_EXCEPTION("게시글이 존재하지 않습니다."),
     NO_AUTHORIZATION_EXCEPTION("권한이 없습니다."),
-    NO_SUCH_COMMENT_EXCEPTION("댓글이 존재하지 않습니다.");
+    NO_SUCH_COMMENT_EXCEPTION("댓글이 존재하지 않습니다."),
+    DUPLICATE_LIKE_EXCEPTION("이미 좋아요를 누른 게시글 입니다.");
 
     private String message;
 

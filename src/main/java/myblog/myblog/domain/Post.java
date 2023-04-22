@@ -31,6 +31,10 @@ public class Post extends TimeStamped {
     @OrderBy("createdAt desc")
     private List<Comment> commentList = new ArrayList<>();
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int likeCount;
+
     //RequestDTO 를 Post로 변환
     public Post(PostRequestDTO requestDTO) {
         this.title = requestDTO.getTitle();
