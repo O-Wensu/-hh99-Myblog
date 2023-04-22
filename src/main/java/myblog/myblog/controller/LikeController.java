@@ -15,7 +15,7 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/like/{id}")
-    public ResponseEntity insert(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity updatePostLike(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return likeService.updatePostLike(id, userDetails.getMember());
     }
 
