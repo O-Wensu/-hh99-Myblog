@@ -6,10 +6,10 @@ import myblog.myblog.domain.Post;
 import myblog.myblog.dto.BasicResponseDto;
 import myblog.myblog.dto.post.PostRequestDTO;
 import myblog.myblog.dto.post.PostResponseDTO;
-import myblog.myblog.exception.custom_exeption.PostException;
+import myblog.myblog.exception.custom_exeption.post.NoAuthorizationException;
+import myblog.myblog.exception.custom_exeption.post.NoSuchPostException;
 import myblog.myblog.repository.LikeRepository;
 import myblog.myblog.repository.PostRepository;
-import myblog.myblog.util.ExceptionMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -99,7 +99,7 @@ public class PostService {
     //게시글 존재 여부 확인
     private Post validatePost(Long id) {
         return postRepository.findById(id).orElseThrow(
-                () -> new PostException(ExceptionMessage.NO_SUCH_BOARD_EXCEPTION.getMessage())
+                () -> new NoSuchPostException()
         );
     }
 
@@ -107,7 +107,7 @@ public class PostService {
     private void isPostAuthor(Member member, Post post) {
         if (!post.getMember().getUsername().equals(member.getUsername())) {
             if (member.isAdmin()) return;
-            throw new PostException(ExceptionMessage.NO_AUTHORIZATION_EXCEPTION.getMessage());
+            throw new NoAuthorizationException();
         }
     }
 }

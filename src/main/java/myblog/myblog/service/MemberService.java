@@ -10,11 +10,12 @@ import myblog.myblog.dto.member.LoginRequestDto;
 import myblog.myblog.dto.BasicResponseDto;
 import myblog.myblog.dto.member.MemberResponseDto;
 import myblog.myblog.dto.member.SignupRequestDto;
-import myblog.myblog.exception.custom_exeption.MemberException;
+import myblog.myblog.exception.custom_exeption.member.DuplicateMemberException;
+import myblog.myblog.exception.custom_exeption.member.NoSuchMemberException;
+import myblog.myblog.exception.custom_exeption.member.NotMatchPasswordException;
 import myblog.myblog.repository.MemberRepository;
 import myblog.myblog.jwt.TokenProvider;
 import myblog.myblog.repository.RefreshTokenRepository;
-import myblog.myblog.util.ExceptionMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -96,7 +97,7 @@ public class MemberService {
     //회원 여부 체크
     private Member validateMember(String username) {
         return memberRepository.findByUsername(username).orElseThrow(
-                () -> new MemberException(ExceptionMessage.NO_SUCH_MEMBER_EXCEPTION.getMessage())
+                () -> new NoSuchMemberException()
         );
     }
 
@@ -104,14 +105,14 @@ public class MemberService {
     private void validateDuplicateMember(String username) {
         memberRepository.findByUsername(username)
                 .ifPresent(m -> {
-                    throw new MemberException(ExceptionMessage.DUPLICATE_ID_EXCEPTION.getMessage());
+                    throw new DuplicateMemberException();
                 });
     }
 
     //비밀번호 일치 여부 체크
     private void validatePassword(String password, Member member) {
         if (!passwordEncoder.matches(password, member.getPassword())) {
-            throw new MemberException(ExceptionMessage.NOT_MATCHING_PASSWORD_EXCEPTION.getMessage());
+            throw new NotMatchPasswordException();
         }
     }
 }

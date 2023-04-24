@@ -3,8 +3,10 @@ package myblog.myblog.service;
 import lombok.RequiredArgsConstructor;
 import myblog.myblog.domain.*;
 import myblog.myblog.dto.BasicResponseDto;
-import myblog.myblog.exception.custom_exeption.CommentException;
-import myblog.myblog.exception.custom_exeption.PostException;
+import myblog.myblog.exception.custom_exeption.comment.CommentException;
+import myblog.myblog.exception.custom_exeption.comment.NoSuchCommentException;
+import myblog.myblog.exception.custom_exeption.post.NoSuchPostException;
+import myblog.myblog.exception.custom_exeption.post.PostException;
 import myblog.myblog.repository.CommentRepository;
 import myblog.myblog.repository.LikeRepository;
 import myblog.myblog.repository.PostRepository;
@@ -74,14 +76,14 @@ public class LikeService {
     //댓글 존재 여부 확인
     private Comment validateComment(Long id) {
         return commentRepository.findById(id).orElseThrow(
-                () -> new CommentException(ExceptionMessage.NO_SUCH_COMMENT_EXCEPTION.getMessage())
+                () -> new NoSuchCommentException()
         );
     }
 
     //게시글 존재 여부 확인
     private Post validatePost(Long id) {
         return postRepository.findById(id).orElseThrow(
-                () -> new PostException(ExceptionMessage.NO_SUCH_BOARD_EXCEPTION.getMessage())
+                () -> new NoSuchPostException()
         );
     }
 

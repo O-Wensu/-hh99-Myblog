@@ -1,9 +1,9 @@
 package myblog.myblog.exception;
 
 import myblog.myblog.dto.BasicResponseDto;
-import myblog.myblog.exception.custom_exeption.CommentException;
-import myblog.myblog.exception.custom_exeption.MemberException;
-import myblog.myblog.exception.custom_exeption.PostException;
+import myblog.myblog.exception.custom_exeption.comment.CommentException;
+import myblog.myblog.exception.custom_exeption.member.MemberException;
+import myblog.myblog.exception.custom_exeption.post.PostException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

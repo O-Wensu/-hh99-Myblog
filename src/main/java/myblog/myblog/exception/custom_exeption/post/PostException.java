@@ -1,4 +1,4 @@
-package myblog.myblog.exception.custom_exeption;
+package myblog.myblog.exception.custom_exeption.post;
 
 public class PostException extends RuntimeException {
     public PostException() {
