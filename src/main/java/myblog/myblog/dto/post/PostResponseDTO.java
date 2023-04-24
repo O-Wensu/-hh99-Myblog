@@ -1,8 +1,6 @@
 package myblog.myblog.dto.post;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import myblog.myblog.domain.Post;
 import myblog.myblog.dto.comment.CommentResponseDto;
 

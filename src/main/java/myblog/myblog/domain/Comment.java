@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import myblog.myblog.dto.comment.CommentRequestDto;
 import org.hibernate.annotations.ColumnDefault;
+import java.util.*;
 
 @Getter
 @Entity
@@ -31,6 +32,13 @@ public class Comment extends TimeStamped {
     @ColumnDefault("0")
     private int likeCount;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parentId")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    private List<Comment> children = new ArrayList<>();
+
     public Comment(CommentRequestDto commentRequestDTO) {
         this.comment = commentRequestDTO.getComment();
     }
@@ -55,5 +63,9 @@ public class Comment extends TimeStamped {
     public void cancelLike() {
         if (likeCount - 1 < 0) return;
         likeCount -= 1;
+    }
+//     부모 댓글 수정
+    public void updateParent(Comment parent){
+        this.parent = parent;
     }
 }

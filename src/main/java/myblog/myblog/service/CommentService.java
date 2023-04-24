@@ -34,6 +34,65 @@ public class CommentService {
      */
     @Transactional
     public ResponseEntity saveComment(Long postId, CommentRequestDto commentRequestDTO, Member member) {
+
+        Comment comment = new Comment(commentRequestDTO);
+
+        //게시글 존재 여부 확인
+        Post post = validatePost(postId);
+
+        Comment parentComment = null;
+
+        //자식 댓글
+        if (commentRequestDTO.getParentId() != null) {
+            //대댓글을 작성하고자 하는 부모 댓글이 존재하는지 판단
+            parentComment = validateComment(commentRequestDTO.getParentId());
+
+            // 부모댓글의 게시글 번호와 자식댓글의 게시글 번호 같은지 체크하기
+            if(parentComment.getPost().getId() != postId){
+                throw new CommentException("부모 댓글과 자식 댓글의 게시글 번호가 일치하지 않습니다.");
+            }
+        }
+
+        comment.setPost(post);
+        comment.setMember(member);
+
+        //대댓글의 부모 댓글 설정
+        if (parentComment != null) {
+            comment.updateParent(parentComment);
+            log.info("parentCommentId: " + comment.getParent().getId());
+
+        } else {
+            comment.updateParent(null);
+        }
+/*
+        // post의 댓글 리스트에 추가
+        post.addComment(comment);*/
+
+        commentRepository.save(comment);
+
+        CommentResponseDto commentResponseDto = null;
+        if(parentComment != null){
+            commentResponseDto = CommentResponseDto.builder()
+                    .id(comment.getId())
+                    .username(comment.getMember().getUsername())
+                    .comment(comment.getComment())
+                    .createdAt(comment.getCreatedAt())
+                    .modifiedAt(comment.getModifiedAt())
+                    .parentComment(comment.getParent().getId())
+                    .build();
+        } else {
+            commentResponseDto = CommentResponseDto.builder()
+                    .id(comment.getId())
+                    .username(comment.getMember().getUsername())
+                    .comment(comment.getComment())
+                    .createdAt(comment.getCreatedAt())
+                    .modifiedAt(comment.getModifiedAt())
+                    .build();
+        }
+
+        BasicResponseDto basicResponseDTO = BasicResponseDto.setSuccess("save success", commentResponseDto);
+        return new ResponseEntity(basicResponseDTO, HttpStatus.OK);
+        /*
         Comment comment = new Comment(commentRequestDTO);
 
         //게시글 존재 여부 확인
@@ -45,7 +104,7 @@ public class CommentService {
 
         commentRepository.save(comment);
         BasicResponseDto basicResponseDTO = BasicResponseDto.setSuccess("save success", new CommentResponseDto(comment));
-        return new ResponseEntity(basicResponseDTO, HttpStatus.OK);
+        return new ResponseEntity(basicResponseDTO, HttpStatus.OK);*/
     }
 
     /**
