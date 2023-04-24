@@ -93,19 +93,6 @@ public class CommentService {
 
         BasicResponseDto basicResponseDTO = BasicResponseDto.setSuccess("save success", commentResponseDto);
         return new ResponseEntity(basicResponseDTO, HttpStatus.OK);
-        /*
-        Comment comment = new Comment(commentRequestDTO);
-
-        //게시글 존재 여부 확인
-        Post post = validatePost(postId);
-
-        // post의 댓글 리스트에 추가
-        post.addComment(comment);
-        comment.setMember(member);
-
-        commentRepository.save(comment);
-        BasicResponseDto basicResponseDTO = BasicResponseDto.setSuccess("save success", new CommentResponseDto(comment));
-        return new ResponseEntity(basicResponseDTO, HttpStatus.OK);*/
     }
 
     /**
